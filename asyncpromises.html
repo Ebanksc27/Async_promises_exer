@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Facts</title>
+</head>
+<body>
+  <h1>Number Facts</h1>
+  <div id="fact"></div>
+
+  <script>
+    const number = 7; 
+    fetch(`http://numbersapi.com/${number}?json`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('fact').innerText = data.text;
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+</body>
+</html>

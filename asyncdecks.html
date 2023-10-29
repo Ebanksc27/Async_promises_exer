@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deck of Cards</title>
+</head>
+<body>
+  <h1>Deck of Cards</h1>
+  <button id="drawCardBtn" disabled>Draw a Card</button>
+  <div id="cards"></div>
+
+  <script>
+    let deckId;
+    const drawCardBtn = document.getElementById('drawCardBtn');
+    const cardsDiv = document.getElementById('cards');
+
+    fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+      .then(response => response.json())
+      .then(data => {
+        deckId = data.deck_id;
+        drawCardBtn.disabled = false;
+      })
+      .catch(error => console.error('Error fetching deck:', error));
+
+    drawCardBtn.addEventListener('click', () => {
+      fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.cards.length > 0) {
+            const card = data.cards[0];
+            const cardImage = document.createElement('img');
+            cardImage.src = card.image;
+            cardImage.alt = `${card.value} of ${card.suit}`;
+            cardsDiv.appendChild(cardImage);
+          } else {
+            drawCardBtn.disabled = true;
+            alert('No more cards in the deck!');
+          }
+        })
+        .catch(error => console.error('Error drawing card:', error));
+    });
+  </script>
+</body>
+</html>
